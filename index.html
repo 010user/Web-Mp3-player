@@ -1,147 +1,199 @@
 <!doctype html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Truck Wala — Music Player</title>
-<meta name="description" content="A custom music player powered by a YouTube playlist.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bhajan Sandhya — भजन संध्या</title>
+<meta name="description" content="An evening of bhajans. Press play and let the diya burn.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#11100d;--card:#1c1914;--ink:#f5ead3;--muted:#a99c86;--line:#3b3328;--accent:#e7c36a}
-*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#302718 0,#11100d 46%,#090909 100%);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
-.wrap{width:min(680px,100%);margin:auto;padding:18px 14px 40px}.brand{text-align:center;font-weight:900;letter-spacing:.08em;font-size:12px;color:var(--accent);text-transform:uppercase}
-h1{text-align:center;font-size:30px;margin:7px 0 2px}.sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:18px}
-.cassette{background:linear-gradient(145deg,#242018,#17140f);border:1px solid #4a3f30;border-radius:24px;padding:15px;box-shadow:0 20px 70px #0009}
-.tape{position:relative;background:#d9c69e;color:#282117;border-radius:14px;padding:20px 15px 16px;min-height:170px;overflow:hidden}
-.tape:before,.tape:after{content:"";position:absolute;top:68px;width:68px;height:68px;border-radius:50%;background:#282117;border:10px solid #b4a47f;box-shadow:inset 0 0 0 8px #3a3022}
-.tape:before{left:12%}.tape:after{right:12%}
-.label{position:relative;z-index:2;background:#efe2c0;border:1px solid #8c7a58;border-radius:8px;text-align:center;padding:12px 8px;margin:auto;width:62%;min-height:95px;display:flex;flex-direction:column;justify-content:center}
-.label b{font-size:20px}.label span{font-size:11px;margin-top:5px;letter-spacing:.12em;text-transform:uppercase}
-.playerbox{margin-top:14px;background:#000;border-radius:13px;overflow:hidden;aspect-ratio:16/9;min-height:200px}
-#player{width:100%;height:100%}.info{padding:17px 3px 8px}.eyebrow{font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}.title{font-weight:800;font-size:18px;line-height:1.35;margin-top:5px;min-height:25px}
-.controls{display:flex;justify-content:center;align-items:center;gap:12px;margin:13px 0}button{border:1px solid var(--line);background:#29241c;color:var(--ink);width:50px;height:50px;border-radius:50%;font-size:19px;cursor:pointer}button:hover{border-color:var(--accent)}.main{width:64px;height:64px;background:var(--accent);color:#17130d;border:0;font-size:24px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.wide{width:100%;height:44px;border-radius:11px;font-size:13px;font-weight:800}.active{background:var(--accent);color:#17130d;border-color:var(--accent)}
-.progress{margin-top:14px}.bar{height:5px;background:#3b352b;border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:var(--accent);transition:width .2s}.times{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin-top:5px}
-.status{text-align:center;color:var(--muted);font-size:11px;margin-top:12px;min-height:16px}.note{font-size:10px;color:#817765;text-align:center;line-height:1.5;margin:14px 3px 0}
-@media(max-width:430px){h1{font-size:25px}.tape{min-height:150px}.label{width:58%}.label b{font-size:16px}.tape:before,.tape:after{width:57px;height:57px;top:62px}}
+  :root{
+    --sky-top:#150826;
+    --sky-mid:#3a1a52;
+    --sky-low:#7a3a3f;
+    --gold:#e8a33d;
+    --flame:#ff9346;
+    --brass:#c9a227;
+    --ivory:#f5ecd9;
+    --ivory-dim:#cdbfa4;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 120% 60% at 50% 100%, var(--sky-low) 0%, transparent 60%),
+      linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-low) 100%);
+    background-attachment:fixed;
+    font-family:'Poppins',sans-serif;
+    color:var(--ivory);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding:6vh 5vw 8vh;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* faint stars */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 20%, var(--ivory-dim) 50%, transparent),
+      radial-gradient(1px 1px at 65% 12%, var(--ivory-dim) 50%, transparent),
+      radial-gradient(1.5px 1.5px at 80% 30%, var(--ivory-dim) 50%, transparent),
+      radial-gradient(1px 1px at 40% 8%, var(--ivory-dim) 50%, transparent),
+      radial-gradient(1.5px 1.5px at 92% 18%, var(--ivory-dim) 50%, transparent),
+      radial-gradient(1px 1px at 10% 35%, var(--ivory-dim) 50%, transparent);
+    opacity:0.5;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .diya-wrap{
+    position:relative;
+    z-index:1;
+    width:120px;
+    height:170px;
+    margin-bottom:0.5rem;
+    filter:drop-shadow(0 0 40px rgba(255,147,70,0.55));
+  }
+
+  .flame{
+    position:absolute;
+    left:50%;
+    top:6px;
+    width:20px;
+    height:46px;
+    transform:translateX(-50%);
+    background:radial-gradient(ellipse at 50% 80%, #fff3c4 0%, var(--flame) 45%, rgba(255,80,30,0) 75%);
+    border-radius:50% 50% 50% 50% / 65% 65% 35% 35%;
+    transform-origin:50% 100%;
+    animation:flicker 2.6s ease-in-out infinite;
+  }
+  @keyframes flicker{
+    0%,100%{ transform:translateX(-50%) rotate(-1.5deg) scaleY(1); }
+    20%{ transform:translateX(-48%) rotate(2deg) scaleY(1.05); }
+    40%{ transform:translateX(-52%) rotate(-2.5deg) scaleY(0.95); }
+    60%{ transform:translateX(-50%) rotate(1.5deg) scaleY(1.08); }
+    80%{ transform:translateX(-49%) rotate(-1deg) scaleY(0.98); }
+  }
+
+  .diya-bowl{
+    position:absolute;
+    left:50%;
+    top:56px;
+    transform:translateX(-50%);
+    width:110px;
+    height:44px;
+    background:linear-gradient(180deg, var(--brass) 0%, #8a6b18 100%);
+    border-radius:0 0 110px 110px / 0 0 60px 60px;
+    box-shadow: inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 6px rgba(255,235,180,0.4);
+  }
+  .diya-rim{
+    position:absolute;
+    left:50%;
+    top:50px;
+    transform:translateX(-50%);
+    width:118px;
+    height:16px;
+    background:linear-gradient(180deg, #f0cf6a 0%, var(--brass) 100%);
+    border-radius:50%;
+  }
+
+  h1{
+    font-family:'Yatra One',cursive;
+    font-weight:400;
+    font-size:clamp(2.2rem, 6vw, 3.4rem);
+    margin:0.4rem 0 0.1rem;
+    color:var(--gold);
+    text-align:center;
+    letter-spacing:0.5px;
+    text-shadow:0 0 24px rgba(232,163,61,0.35);
+    z-index:1;
+  }
+  h1 .en{
+    display:block;
+    font-family:'Poppins',sans-serif;
+    font-weight:300;
+    font-size:0.42em;
+    letter-spacing:4px;
+    text-transform:uppercase;
+    color:var(--ivory-dim);
+    margin-top:0.4rem;
+  }
+
+  .tagline{
+    z-index:1;
+    max-width:36ch;
+    text-align:center;
+    color:var(--ivory-dim);
+    font-weight:300;
+    font-size:0.95rem;
+    line-height:1.6;
+    margin:0.8rem 0 3rem;
+  }
+
+  .player{
+    z-index:1;
+    width:100%;
+    max-width:720px;
+    aspect-ratio:16/9;
+    border-radius:14px;
+    overflow:hidden;
+    border:1px solid rgba(232,163,61,0.35);
+    box-shadow:0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.02);
+    background:#0d0616;
+  }
+  .player iframe{
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
+  }
+
+  footer{
+    z-index:1;
+    margin-top:3rem;
+    color:var(--ivory-dim);
+    font-size:0.78rem;
+    letter-spacing:0.5px;
+    opacity:0.7;
+    text-align:center;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .flame{ animation:none; }
+  }
 </style>
 </head>
 <body>
-<main class="wrap">
-<div class="brand">Horn OK Please inspired • Your player</div>
-<h1>Truck Wala</h1>
-<div class="sub">Random music from your YouTube playlist</div>
 
-<section class="cassette">
-  <div class="tape">
-    <div class="label">
-      <b>ट्रक वाला</b>
-      <span>Horn ok pleaseeee</span>
-      <span>42 on the highway</span>
-    </div>
+  <div class="diya-wrap">
+    <div class="flame"></div>
+    <div class="diya-rim"></div>
+    <div class="diya-bowl"></div>
   </div>
 
-  <div class="playerbox"><div id="player"></div></div>
+  <h1>भजन संध्या<span class="en">Bhajan Sandhya</span></h1>
 
-  <div class="info">
-    <div class="eyebrow">Now playing</div>
-    <div class="title" id="title">Loading playlist…</div>
+  <p class="tagline">An evening of devotion. Light one diya, press play, and let the bhajans carry the rest.</p>
+
+  <div class="player">
+    <iframe
+      src="https://www.youtube.com/embed/videoseries?list=PLW_QVE4bQ1Eo7RbN0nlIqFEFto1HatpSN"
+      title="Bhajan Sandhya playlist"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
   </div>
 
-  <div class="controls">
-    <button onclick="previousSong()" aria-label="Previous">⏮</button>
-    <button class="main" id="play" onclick="togglePlay()" aria-label="Play">▶</button>
-    <button onclick="nextSong()" aria-label="Next">⏭</button>
-  </div>
+  <footer>Bhajan Sandhya</footer>
 
-  <div class="row">
-    <button class="wide active" id="shuffle" onclick="randomSong()">🔀 Random</button>
-    <button class="wide" onclick="openPlaylist()">☷ Playlist</button>
-  </div>
-
-  <div class="progress">
-    <div class="bar"><div class="fill" id="fill"></div></div>
-    <div class="times"><span id="current">0:00</span><span id="duration">0:00</span></div>
-  </div>
-
-  <div class="status" id="status">Loading YouTube player…</div>
-  <div class="note">Playback is provided by the official YouTube embedded player. YouTube controls and advertising remain under YouTube's control.</div>
-</section>
-</main>
-
-<script>
-const PLAYLIST_ID="PLBO8vPt12vLdn6AmhpfMT1d28lbzE_HMB";
-let player=null,ready=false,timer=null;
-
-const s=document.createElement("script");
-s.src="https://www.youtube.com/iframe_api";
-document.head.appendChild(s);
-
-function onYouTubeIframeAPIReady(){
-  player=new YT.Player("player",{
-    width:"100%",height:"100%",
-    playerVars:{listType:"playlist",list:PLAYLIST_ID,playsinline:1,rel:0},
-    events:{onReady:onReady,onStateChange:onStateChange,onError:onError}
-  });
-}
-function onReady(){
-  ready=true; status("Playlist loaded");
-  setTimeout(()=>{
-    const list=player.getPlaylist()||[];
-    if(list.length){
-      const i=Math.floor(Math.random()*list.length);
-      player.setShuffle(true);
-      player.playVideoAt(i);
-      updateTitle();
-    }
-  },1200);
-}
-function togglePlay(){
-  if(!ready)return;
-  if(player.getPlayerState()===YT.PlayerState.PLAYING)player.pauseVideo();
-  else player.playVideo();
-}
-function nextSong(){if(ready){player.nextVideo();status("Next song…")}}
-function previousSong(){if(ready){player.previousVideo();status("Previous song…")}}
-function randomSong(){
-  if(!ready)return;
-  const list=player.getPlaylist()||[];
-  if(!list.length)return;
-  player.setShuffle(true);
-  let i=Math.floor(Math.random()*list.length);
-  if(list.length>1 && i===player.getPlaylistIndex())i=(i+1)%list.length;
-  player.playVideoAt(i);
-  document.getElementById("shuffle").classList.add("active");
-  status("Random song selected");
-}
-function openPlaylist(){window.open("https://www.youtube.com/playlist?list="+PLAYLIST_ID,"_blank","noopener,noreferrer")}
-function onStateChange(e){
-  const b=document.getElementById("play");
-  if(e.data===YT.PlayerState.PLAYING){b.textContent="⏸";status("Playing");updateTitle();startProgress()}
-  else if(e.data===YT.PlayerState.PAUSED){b.textContent="▶";status("Paused");stopProgress()}
-  else if(e.data===YT.PlayerState.ENDED){b.textContent="▶";stopProgress();setTimeout(randomSong,300)}
-}
-function updateTitle(){
-  setTimeout(()=>{
-    if(!player)return;
-    const d=player.getVideoData();
-    document.getElementById("title").textContent=d&&d.title?d.title:"YouTube playlist";
-    document.getElementById("duration").textContent=fmt(player.getDuration());
-  },400);
-}
-function startProgress(){
-  stopProgress();
-  timer=setInterval(()=>{
-    if(!player)return;
-    const d=player.getDuration()||0,c=player.getCurrentTime()||0;
-    document.getElementById("fill").style.width=d?(c/d*100)+"%":"0%";
-    document.getElementById("current").textContent=fmt(c);
-    document.getElementById("duration").textContent=fmt(d);
-  },500);
-}
-function stopProgress(){if(timer){clearInterval(timer);timer=null}}
-function fmt(n){n=Math.floor(n||0);return Math.floor(n/60)+":"+String(n%60).padStart(2,"0")}
-function status(t){document.getElementById("status").textContent=t}
-function onError(){status("This video cannot be played. Skipping…");setTimeout(randomSong,1000)}
-</script>
 </body>
 </html>
