@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Truck Wala — Music Player</title>
+<meta name="description" content="A custom music player powered by a YouTube playlist.">
+<style>
+:root{--bg:#11100d;--card:#1c1914;--ink:#f5ead3;--muted:#a99c86;--line:#3b3328;--accent:#e7c36a}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#302718 0,#11100d 46%,#090909 100%);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+.wrap{width:min(680px,100%);margin:auto;padding:18px 14px 40px}.brand{text-align:center;font-weight:900;letter-spacing:.08em;font-size:12px;color:var(--accent);text-transform:uppercase}
+h1{text-align:center;font-size:30px;margin:7px 0 2px}.sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:18px}
+.cassette{background:linear-gradient(145deg,#242018,#17140f);border:1px solid #4a3f30;border-radius:24px;padding:15px;box-shadow:0 20px 70px #0009}
+.tape{position:relative;background:#d9c69e;color:#282117;border-radius:14px;padding:20px 15px 16px;min-height:170px;overflow:hidden}
+.tape:before,.tape:after{content:"";position:absolute;top:68px;width:68px;height:68px;border-radius:50%;background:#282117;border:10px solid #b4a47f;box-shadow:inset 0 0 0 8px #3a3022}
+.tape:before{left:12%}.tape:after{right:12%}
+.label{position:relative;z-index:2;background:#efe2c0;border:1px solid #8c7a58;border-radius:8px;text-align:center;padding:12px 8px;margin:auto;width:62%;min-height:95px;display:flex;flex-direction:column;justify-content:center}
+.label b{font-size:20px}.label span{font-size:11px;margin-top:5px;letter-spacing:.12em;text-transform:uppercase}
+.playerbox{margin-top:14px;background:#000;border-radius:13px;overflow:hidden;aspect-ratio:16/9;min-height:200px}
+#player{width:100%;height:100%}.info{padding:17px 3px 8px}.eyebrow{font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}.title{font-weight:800;font-size:18px;line-height:1.35;margin-top:5px;min-height:25px}
+.controls{display:flex;justify-content:center;align-items:center;gap:12px;margin:13px 0}button{border:1px solid var(--line);background:#29241c;color:var(--ink);width:50px;height:50px;border-radius:50%;font-size:19px;cursor:pointer}button:hover{border-color:var(--accent)}.main{width:64px;height:64px;background:var(--accent);color:#17130d;border:0;font-size:24px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.wide{width:100%;height:44px;border-radius:11px;font-size:13px;font-weight:800}.active{background:var(--accent);color:#17130d;border-color:var(--accent)}
+.progress{margin-top:14px}.bar{height:5px;background:#3b352b;border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:var(--accent);transition:width .2s}.times{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin-top:5px}
+.status{text-align:center;color:var(--muted);font-size:11px;margin-top:12px;min-height:16px}.note{font-size:10px;color:#817765;text-align:center;line-height:1.5;margin:14px 3px 0}
+@media(max-width:430px){h1{font-size:25px}.tape{min-height:150px}.label{width:58%}.label b{font-size:16px}.tape:before,.tape:after{width:57px;height:57px;top:62px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="brand">Horn OK Please inspired • Your player</div>
+<h1>Truck Wala</h1>
+<div class="sub">Random music from your YouTube playlist</div>
+
+<section class="cassette">
+  <div class="tape">
+    <div class="label">
+      <b>ट्रक वाला</b>
+      <span>Horn ok pleaseeee</span>
+      <span>42 on the highway</span>
+    </div>
+  </div>
+
+  <div class="playerbox"><div id="player"></div></div>
+
+  <div class="info">
+    <div class="eyebrow">Now playing</div>
+    <div class="title" id="title">Loading playlist…</div>
+  </div>
+
+  <div class="controls">
+    <button onclick="previousSong()" aria-label="Previous">⏮</button>
+    <button class="main" id="play" onclick="togglePlay()" aria-label="Play">▶</button>
+    <button onclick="nextSong()" aria-label="Next">⏭</button>
+  </div>
+
+  <div class="row">
+    <button class="wide active" id="shuffle" onclick="randomSong()">🔀 Random</button>
+    <button class="wide" onclick="openPlaylist()">☷ Playlist</button>
+  </div>
+
+  <div class="progress">
+    <div class="bar"><div class="fill" id="fill"></div></div>
+    <div class="times"><span id="current">0:00</span><span id="duration">0:00</span></div>
+  </div>
+
+  <div class="status" id="status">Loading YouTube player…</div>
+  <div class="note">Playback is provided by the official YouTube embedded player. YouTube controls and advertising remain under YouTube's control.</div>
+</section>
+</main>
+
+<script>
+const PLAYLIST_ID="PLBO8vPt12vLdn6AmhpfMT1d28lbzE_HMB";
+let player=null,ready=false,timer=null;
+
+const s=document.createElement("script");
+s.src="https://www.youtube.com/iframe_api";
+document.head.appendChild(s);
+
+function onYouTubeIframeAPIReady(){
+  player=new YT.Player("player",{
+    width:"100%",height:"100%",
+    playerVars:{listType:"playlist",list:PLAYLIST_ID,playsinline:1,rel:0},
+    events:{onReady:onReady,onStateChange:onStateChange,onError:onError}
+  });
+}
+function onReady(){
+  ready=true; status("Playlist loaded");
+  setTimeout(()=>{
+    const list=player.getPlaylist()||[];
+    if(list.length){
+      const i=Math.floor(Math.random()*list.length);
+      player.setShuffle(true);
+      player.playVideoAt(i);
+      updateTitle();
+    }
+  },1200);
+}
+function togglePlay(){
+  if(!ready)return;
+  if(player.getPlayerState()===YT.PlayerState.PLAYING)player.pauseVideo();
+  else player.playVideo();
+}
+function nextSong(){if(ready){player.nextVideo();status("Next song…")}}
+function previousSong(){if(ready){player.previousVideo();status("Previous song…")}}
+function randomSong(){
+  if(!ready)return;
+  const list=player.getPlaylist()||[];
+  if(!list.length)return;
+  player.setShuffle(true);
+  let i=Math.floor(Math.random()*list.length);
+  if(list.length>1 && i===player.getPlaylistIndex())i=(i+1)%list.length;
+  player.playVideoAt(i);
+  document.getElementById("shuffle").classList.add("active");
+  status("Random song selected");
+}
+function openPlaylist(){window.open("https://www.youtube.com/playlist?list="+PLAYLIST_ID,"_blank","noopener,noreferrer")}
+function onStateChange(e){
+  const b=document.getElementById("play");
+  if(e.data===YT.PlayerState.PLAYING){b.textContent="⏸";status("Playing");updateTitle();startProgress()}
+  else if(e.data===YT.PlayerState.PAUSED){b.textContent="▶";status("Paused");stopProgress()}
+  else if(e.data===YT.PlayerState.ENDED){b.textContent="▶";stopProgress();setTimeout(randomSong,300)}
+}
+function updateTitle(){
+  setTimeout(()=>{
+    if(!player)return;
+    const d=player.getVideoData();
+    document.getElementById("title").textContent=d&&d.title?d.title:"YouTube playlist";
+    document.getElementById("duration").textContent=fmt(player.getDuration());
+  },400);
+}
+function startProgress(){
+  stopProgress();
+  timer=setInterval(()=>{
+    if(!player)return;
+    const d=player.getDuration()||0,c=player.getCurrentTime()||0;
+    document.getElementById("fill").style.width=d?(c/d*100)+"%":"0%";
+    document.getElementById("current").textContent=fmt(c);
+    document.getElementById("duration").textContent=fmt(d);
+  },500);
+}
+function stopProgress(){if(timer){clearInterval(timer);timer=null}}
+function fmt(n){n=Math.floor(n||0);return Math.floor(n/60)+":"+String(n%60).padStart(2,"0")}
+function status(t){document.getElementById("status").textContent=t}
+function onError(){status("This video cannot be played. Skipping…");setTimeout(randomSong,1000)}
+</script>
+</body>
+</html>
